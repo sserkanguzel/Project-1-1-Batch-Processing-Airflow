@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: ghcr.io/sserkanguzel/project-1.1-batch-processing-airflow
-      GITOPS_REPO: airflow-deployment
-      GITOPS_PATH: manifests/airflow/values.yaml
+      IMAGE_NAME: ghcr.io/sserkanguzel/project-1-1-batch-processing-airflow
+      GITOPS_REPO: Project-1-Batch-Processing-Infrastructure
+      GITOPS_PATH: airflow-manifests/values.yaml
 
     permissions:
       contents: write
