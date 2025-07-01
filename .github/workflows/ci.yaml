@@ -64,4 +64,4 @@ jobs:
           cd infra
           git add airflow-manifests/values.yaml airflow-manifests/config/pod_template.yaml
           git commit -m "Update Airflow image tag to ${{ steps.vars.outputs.tag }}"
-          git push https://x-access-token:${{ secrets.GHCR_PAT }}@github.com/sserkanguzel/Project-1-Batch-Processing-Infrastructure.git HEAD:main
+          git push https://x-access-token:${{ secrets.INFRA_PAT }}@github.com/sserkanguzel/Project-1-Batch-Processing-Infrastructure.git HEAD:main
