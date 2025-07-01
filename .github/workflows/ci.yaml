@@ -30,7 +30,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Build and push image
         run: |
@@ -56,4 +56,4 @@ jobs:
           cd infra
           git add airflow-manifests/values.yaml
           git commit -m "Update Airflow image tag to ${{ steps.vars.outputs.tag }}"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/sserkanguzel/Project-1-Batch-Processing-Infrastructure.git HEAD:main
+          git push https://x-access-token:${{ secrets.GHCR_PAT }}@github.com/sserkanguzel/Project-1-Batch-Processing-Infrastructure.git HEAD:main
