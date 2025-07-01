@@ -15,7 +15,7 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ghcr.io/sserkanguzel/Project-1-1-Batch-Processing-Airflow
+      IMAGE_NAME: ghcr.io/sserkanguzel/project-1-1-batch-processing-airflow
 
     steps:
       - name: Checkout DAG repo
