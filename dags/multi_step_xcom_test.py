@@ -12,11 +12,13 @@ default_args = {
 }
 
 with DAG(
-    dag_id="multi_step_xcom_example",
+    dag_id="MultiStepXcomTest",
     default_args=default_args,
     start_date=days_ago(1),
     schedule_interval=None,
+    description='Run a MultiStep xcom test from Airflow',
     catchup=False,
+    tags=['test'],
 ) as dag:
 
     def generate_message(**kwargs):
