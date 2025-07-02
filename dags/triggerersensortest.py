@@ -6,7 +6,9 @@ with DAG(
     dag_id='test_triggerer_sensor',
     start_date=datetime(2025, 1, 1),
     schedule_interval=None,
+    description='Run a Triggerer from Airflow',
     catchup=False,
+    tags=['test'],
 ) as dag:
     wait_until = TimeSensor(
         task_id='wait_until_5pm',

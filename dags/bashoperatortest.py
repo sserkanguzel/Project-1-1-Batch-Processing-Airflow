@@ -3,9 +3,10 @@ from airflow.operators.bash import BashOperator
 from datetime import datetime
 
 with DAG(
-    dag_id='simple_test_dag',
-    start_date=datetime(2023, 1, 1),
+    dag_id='BashOperator_Test',
+    start_date=datetime(2025, 1, 1),
     schedule_interval=None,
+    description='Run a Bash Operator from Airflow',
     catchup=False,
     tags=['test'],
 ) as dag:
