@@ -12,7 +12,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id="MultiStepXcomTest",
+    dag_id="MultiStepXcom_Test",
     default_args=default_args,
     start_date=days_ago(1),
     schedule_interval=None,

@@ -15,7 +15,6 @@ with DAG(
         task_id="run-echo",
         name="run-echo",
         namespace="airflow",
-        image="busybox",
-        cmds=["echo", "Hello from KubernetesPodOperator!"],
+        pod_template_file="/opt/airflow/pod_templates/pod_template.yaml",
         is_delete_operator_pod=True,
     )

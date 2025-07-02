@@ -3,7 +3,7 @@ from airflow.sensors.time_sensor import TimeSensor
 from datetime import datetime, time
 
 with DAG(
-    dag_id='test_triggerer_sensor',
+    dag_id='TriggererSensor_Test',
     start_date=datetime(2025, 1, 1),
     schedule_interval=None,
     description='Run a Triggerer from Airflow',
