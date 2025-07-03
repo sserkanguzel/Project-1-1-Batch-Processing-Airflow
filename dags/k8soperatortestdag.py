@@ -17,5 +17,6 @@ with DAG(
         namespace="airflow",
         pod_template_file="/opt/airflow/pod_templates/pod_template.yaml",
         is_delete_operator_pod=True,
+        config_file=None,
         cmds=["echo", "Hello from KubernetesPodOperator!"]
     )
