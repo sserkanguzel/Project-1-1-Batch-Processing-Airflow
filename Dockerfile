@@ -12,5 +12,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy DAGs
 COPY dags/ /opt/airflow/dags/
 
+COPY airflow_manifests/config/pod_template.yaml /opt/airflow/pod_templates/pod_template.yaml
+
 
 #COPY plugins/ /opt/airflow/plugins/
