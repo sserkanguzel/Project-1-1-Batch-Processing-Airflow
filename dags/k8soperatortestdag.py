@@ -19,26 +19,7 @@ with DAG(
         task_id="run-echo",
         name="run-echo",
         namespace="airflow",
-        config_file=None,  # Use in-cluster config
+        pod_template_file="/mnt/pod_template/pod_template.yaml",
         is_delete_operator_pod=True,
-        pod_template_file="/opt/airflow/pod_templates/pod_template.yaml",
-        volumes=[
-            {
-                "name": "pod-template",
-                "configMap": {
-                    "name": "airflow-pod-template",
-                    "items": [
-                        {"key": "pod_template.yaml", "path": "pod_template.yaml"}
-                    ],
-                },
-            }
-        ],
-        volume_mounts=[
-            {
-                "name": "pod-template",
-                "mountPath": "/opt/airflow/pod_templates",
-                "readOnly": True,
-            }
-        ],
-        cmds=["echo", "Hello from KubernetesPodOperator!"],
+        cmds=["echo", "Hello from KubernetesPodOperator!"]
     )
