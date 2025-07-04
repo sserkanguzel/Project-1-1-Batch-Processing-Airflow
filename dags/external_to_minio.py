@@ -4,17 +4,18 @@ from datetime import datetime
 import pandas as pd
 import requests
 import boto3
+import os
 import io
 
-
-# MinIO credentials & config
+# Configurations
 MINIO_ENDPOINT = "http://minio.minio.svc.cluster.local:9000"
 MINIO_ACCESS_KEY = "minioadmin"
 MINIO_SECRET_KEY = "minioadmin"
 MINIO_BUCKET = "data"
+LOCAL_DIR = "/tmp/airflow_data"
 
-def extract_transform_to_parquet(**context):
-    # Step 1: Download sample CSV
+def extract_transform_to_parquet():
+    # Step 1: Download CSV
     url = "https://people.sc.fsu.edu/~jburkardt/data/csv/hw_200.csv"
     response = requests.get(url)
     response.raise_for_status()
@@ -25,20 +26,18 @@ def extract_transform_to_parquet(**context):
     run_date = datetime.today().strftime("%Y-%m-%d")
     df["run_date"] = run_date
 
-    # Step 3: Convert to Parquet in memory
-    buffer = io.BytesIO()
-    df.to_parquet(buffer, index=False)
-    buffer.seek(0)
+    # Step 3: Save Parquet to disk
+    os.makedirs(LOCAL_DIR, exist_ok=True)
+    file_path = f"{LOCAL_DIR}/people_stats_{run_date}.parquet"
+    df.to_parquet(file_path, index=False)
 
-    # Step 4: Push buffer and run_date to XCom
-    context['ti'].xcom_push(key='parquet_data', value=buffer.getvalue())
-    context['ti'].xcom_push(key='run_date', value=run_date)
-
-def upload_to_minio(**context):
-    parquet_data = context['ti'].xcom_pull(key='parquet_data', task_ids='extract_transform_to_parquet')
-    run_date = context['ti'].xcom_pull(key='run_date', task_ids='extract_transform_to_parquet')
+def upload_to_minio():
+    # Prepare filenames and keys
+    run_date = datetime.today().strftime("%Y-%m-%d")
+    local_file = f"{LOCAL_DIR}/people_stats_{run_date}.parquet"
     object_key = f"people_stats/run_date={run_date}/people_stats.parquet"
 
+    # Upload to MinIO
     s3 = boto3.client(
         's3',
         endpoint_url=MINIO_ENDPOINT,
@@ -46,18 +45,21 @@ def upload_to_minio(**context):
         aws_secret_access_key=MINIO_SECRET_KEY,
     )
 
-    s3.put_object(
-        Bucket=MINIO_BUCKET,
-        Key=object_key,
-        Body=parquet_data
-    )
+    with open(local_file, "rb") as f:
+        s3.upload_fileobj(f, MINIO_BUCKET, object_key)
+
+default_args = {
+    "owner": "airflow",
+    "start_date": datetime(2025, 1, 1),
+    "retries": 1,
+}
 
 with DAG(
-    dag_id="ExternaltoMinIO",
-    start_date=datetime(2025, 1, 1),
+    dag_id="ExtractAndUploadToMinIO",
+    default_args=default_args,
     schedule_interval="@daily",
     catchup=False,
-    tags=["minio", "test"],
+    tags=["minio", "parquet", "no-xcom"],
 ) as dag:
 
     task1 = PythonOperator(
