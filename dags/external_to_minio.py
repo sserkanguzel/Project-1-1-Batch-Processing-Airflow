@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 import requests
 import boto3
-from io import BytesIO
+import io
 
 # MinIO credentials & config
 MINIO_ENDPOINT = "http://minio.minio.svc.cluster.local:9000"
@@ -18,7 +18,7 @@ def extract_transform_to_parquet(**context):
     response = requests.get(url)
     response.raise_for_status()
 
-    df = pd.read_csv(pd.compat.StringIO(response.text))
+    df = pd.read_csv(io.StringIO(response.text))
 
     # Step 2: Add run_date column
     run_date = datetime.today().strftime("%Y-%m-%d")
