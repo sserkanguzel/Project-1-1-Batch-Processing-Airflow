@@ -6,6 +6,7 @@ import requests
 import boto3
 import io
 
+
 # MinIO credentials & config
 MINIO_ENDPOINT = "http://minio.minio.svc.cluster.local:9000"
 MINIO_ACCESS_KEY = "minioadmin"
@@ -25,7 +26,7 @@ def extract_transform_to_parquet(**context):
     df["run_date"] = run_date
 
     # Step 3: Convert to Parquet in memory
-    buffer = BytesIO()
+    buffer = io.BytesIO()
     df.to_parquet(buffer, index=False)
     buffer.seek(0)
 
