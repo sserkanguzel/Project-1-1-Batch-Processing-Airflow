@@ -13,17 +13,15 @@ MINIO_ENDPOINT = "http://minio.minio.svc.cluster.local:9000"
 MINIO_ACCESS_KEY = "minioadmin"
 MINIO_SECRET_KEY = "minioadmin"
 MINIO_BUCKET = "data"
-LOCAL_DIR = "/tmp/airflow_data"
+LOCAL_DIR = "/opt/airflow/shared"  # <--- PVC mount path
 
 def extract_transform_to_parquet(**context):
-    # Get run_date from Airflow execution context
-    run_date = context['ds']  # e.g., '2025-07-03'
+    run_date = context['ds']
     filename = f"people_stats_{run_date}.parquet"
     local_path = os.path.join(LOCAL_DIR, filename)
 
     os.makedirs(LOCAL_DIR, exist_ok=True)
 
-    # Download sample CSV
     url = "https://people.sc.fsu.edu/~jburkardt/data/csv/hw_200.csv"
     response = requests.get(url)
     response.raise_for_status()
